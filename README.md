@@ -41,7 +41,7 @@ Flask web app for you to visualize data using Plotly.
     
     Run the _ETL pipeline_ script `process_data.py`:
 
-       `python data/process_data.py data/disaster_messages.csv 
+       python data/process_data.py data/disaster_messages.csv 
 data/disaster_categories.csv data/DisasterResponse.db`
 
    The arguments `disaster_messages.csv` and `disaster_categories.csv` are the input data used to train the model. The last argument `DisasterResponse.db` is the SQLite database in which we will to save the cleaned data.
@@ -49,10 +49,10 @@ data/disaster_categories.csv data/DisasterResponse.db`
 2. With the clean data, it is time to build the machine learning model. 
 The command below will use cleaned data to train the model, improve the model using grid search and save the model to a pickle file (_classifer.pkl_).
 
-        `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
+        python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 
 3. Finally, we can see the app as a page by running:
 
-	    `python app/run.py`
+	    python app/run.py
     
     To check on the app go to http://0.0.0.0:3001/.
