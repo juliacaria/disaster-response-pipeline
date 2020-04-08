@@ -80,37 +80,17 @@ def build_model():
     """
     
     # build a pipeline
-    # pipeline = Pipeline([
-    #     ('vect', CountVectorizer(tokenizer=tokenize)),
-    #     ('tfidf', TfidfTransformer()),
-    #     ('clf', MultiOutputClassifier(RandomForestClassifier()))
-    # ])
-    
-    # # params dict to tune a model
-    # parameters = {
-    #     'clf__estimator__min_samples_split': [2, 4],
-    #     'clf__estimator__max_features': [None, 'log2', 'sqrt'],
-    #     'clf__estimator__criterion': ['gini', 'entropy'],
-    #     'clf__estimator__max_depth': [25, 75, 100, 200],
-    # }
-
-    # # instantiate a gridsearchcv object with the params defined
-    # cv = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
-    
-    # return cv
-
-
     pipeline = Pipeline([('vect', CountVectorizer(tokenizer=tokenize)),
                          ('tfidf', TfidfTransformer()),
                          ('clf', MultiOutputClassifier(
                             OneVsRestClassifier(LinearSVC())))])
 
-    # hyper-parameter grid
+    # # params dict to tune a model
     parameters = {'vect__ngram_range': ((1, 1), (1, 2)),
                   'vect__max_df': (0.75, 1.0)
                   }
 
-    # create model
+    # instantiate a gridsearchcv object with the params defined
     model = GridSearchCV(estimator=pipeline,
             param_grid=parameters,
             verbose=3,
