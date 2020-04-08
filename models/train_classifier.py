@@ -26,9 +26,9 @@ def load_data(database_filepath):
     database_filepath string: SQL database file
     
     Returns:
-    X pandas_dataframe: Features dataframe
-    Y pandas_dataframe: Target dataframe
-    category_names list: Target labels 
+    X dataframe: Features dataframe
+    Y dataframe: Target dataframe
+    category_names np.array: Target labels 
     """
 
     # load data from database
@@ -56,7 +56,7 @@ def tokenize(text):
     words list: Processed text after normalizing, tokenizing and lemmatizing
     """
 
-     # Normalize text
+    # Normalize text
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
     
     # tokenize text
@@ -75,8 +75,7 @@ def build_model():
     """
     Definition: Build model with GridSearchCV
     
-    Returns:
-    Trained model after tunning the model parameters with grid search
+    Returns: Trained model after tunning the model parameters with grid search
     """
     
     # build a pipeline
@@ -85,10 +84,12 @@ def build_model():
                          ('clf', MultiOutputClassifier(
                             OneVsRestClassifier(LinearSVC())))])
 
-    # # params dict to tune a model
-    parameters = {'vect__ngram_range': ((1, 1), (1, 2)),
-                  'vect__max_df': (0.75, 1.0)
-                  }
+    # params dict to tune a model
+    parameters = {
+        'vect__ngram_range': ((0, 1), (1, 1), (1, 2)),
+        'vect__max_df': (0.4, 0.75, 1.0),
+        'vect__min_df': (0.4, 0.75, 1.0)
+    }
 
     # instantiate a gridsearchcv object with the params defined
     model = GridSearchCV(estimator=pipeline,
@@ -102,15 +103,16 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Definition: Display the model performance on test data
     
     Args:
-    model: Trained model with gridsearch
-    X_test: Test features
-    Y_test: Test targets
-    category_names: Target labels
+    model GridSearchCV: Trained model with gridsearch
+    X_test np.array: Test features
+    Y_test np.array: Test targets
+    category_names np.array: Target labels
     
     """
 
     # predict
     y_pred = model.predict(X_test)
+
     # print classification report
     print(classification_report(Y_test.values, y_pred, target_names=category_names))
 
@@ -120,7 +122,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 def save_model(model, model_filepath='model_classifier.pkl'):
     """
-    Definition: Saves the model to a Python pickle file    
+    Definition: Saves the model to a pickle file    
     
     Args:
     model: Trained model with gridsearch
